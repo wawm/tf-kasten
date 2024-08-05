@@ -81,6 +81,10 @@ module "eks" {
     vpc-cni = {
       most_recent = true
     }
+
+    aws-ebs-csi-driver = {
+      most_recent = true
+    }
   }
 
   vpc_id                     = var.eks_vpc_id
@@ -116,8 +120,18 @@ module "eks" {
 
   }
 
-
+  
 }
+
+  resource "null_resource" "kasten-pre-init" {
+    
+    provisioner "local-exec" {
+    command = "sudo sh scripts/run.sh"
+  
+  }
+}
+
+  
 
 output "cluster-id" {
   value = module.eks.cluster_id
@@ -130,3 +144,5 @@ output "cluster-name" {
 output "cluster-arn" {
   value = module.eks.cluster_arn
 }
+
+

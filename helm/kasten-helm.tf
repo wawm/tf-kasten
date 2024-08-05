@@ -28,13 +28,20 @@ variable "kasten_chart_ver" {
   type    = string
 }
 
+variable "region" {
+  default = "ap-southeast-1a"
+  type = string
+}
+
 
 resource "kubernetes_namespace" "kasten-ns" {
   metadata {
-    name = "kasten.io"
+    name = "kasten-io"
   }
 
 }
+
+
 
 provider "kubernetes" {
   host                   = data.aws_eks_cluster.demo-cluster.endpoint
@@ -56,8 +63,8 @@ resource "helm_release" "kasten" {
   version          = var.kasten_version
   create_namespace = true
   namespace        = kubernetes_namespace.kasten-ns.id
-  timeout          = 10
-  depends_on       = [kubernetes_namespace.kasten-ns]
+  timeout          = 1800
+  depends_on       = [kubernetes_namespace.kasten-ns ]
 
   set {
     name  = "metrics.enabled"
@@ -78,4 +85,22 @@ resource "helm_release" "kasten" {
     name  = "metering.mode"
     value = "airgap"
   }
+
+  set {
+    name = "global.persistence.enabled"
+    value = "false"
+  }
+
+  set {
+    name = "prometheus.server.enabled"
+    value = "false"
+  }
+
+  set {
+    name = "grafana.enabled"
+    value = "false"
+  }
+
+  
+
 }
