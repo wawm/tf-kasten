@@ -24,7 +24,7 @@ provider "aws" {
 
 variable "eks_cluster_name" {
   description = "The name of the EKS cluster"
-  default     = "kasten-demo"
+  default     = "eks-demo"
   type        = string
 }
 
@@ -123,7 +123,7 @@ module "eks" {
   
 }
 
-  resource "null_resource" "kasten-pre-init" {
+  resource "null_resource" "prg-init" {
     
     provisioner "local-exec" {
     command = "sudo sh scripts/run.sh"
@@ -131,7 +131,6 @@ module "eks" {
   }
 }
 
-  
 
 output "cluster-id" {
   value = module.eks.cluster_id
